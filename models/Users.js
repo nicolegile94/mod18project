@@ -12,8 +12,13 @@ const UserSchema = new Schema({
         required: true,
         unique: true,
         //must match a valid email address
-    }
-   //thoughts integration,
+    },
+    thoughts: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Thought'
+        }
+    ]
    //friends integration
 });
 
