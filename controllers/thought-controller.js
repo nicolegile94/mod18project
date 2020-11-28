@@ -47,29 +47,32 @@ const thoughtController = {
       .catch(err => res.json(err));
     },
 
-    updateThought({ params, body }, res) {
-        Thought.findOneAndUpdate({ _id: params.id }, body, { new: true })
+    updateThought(req, res) {
+        Thought.findOneAndUpdate({ _id: req.params.thoughtId }, { $set: req.body}, { new: true })
           .then(dbThoughtData => {
             if (!dbThoughtData) {
-              res.status(404).json({ message: 'No thought found with this id' });
-              return;
+              return res.status(404).json({ message: 'No thought found with this id' });
             }
             res.json(dbThoughtData);
           })
-          .catch(err => res.status(404).json(err));
+          .catch((err) => {
+            console.log(err);
+            res.status(500).json(err);
+          });
       },
 
-      deleteThought({ params }, res) {
-        Thought.findOneAndDelete({ _id: params.id })
+      deleteThought(req, res) {
+        Thought.findOneAndRemove({ _id: req.params.thoughtId })
           .then(dbThoughtData => {
             if (!dbThoughtData) {
-              res.status(404).json({ message: 'No thought found with this id'});
-              return;
+              return res.status(404).json({ message: 'No thought found with this id'});
             }
-            res.json(dbThoughtData);
+            res.json(dbThoughtData)
           })
-          .catch(err => res.status(400).json(err));
-      },
+          .catch((err) => {
+            console.log(err);
+            res.status(500).json(err);
+          });      },
 
       deleteReaction({ params }, res) {
         Thought.findOneAndDelete({_id: params.reactionId })
